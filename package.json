@@ -1,0 +1,8 @@
+{
+  "name": "reinow-parceiro",
+  "version": "2.0.0",
+  "description": "Agente Parceiro REINOW - Conteudo Express",
+  "dependencies": {
+    "docx": "^8.5.0"
+  }
+}

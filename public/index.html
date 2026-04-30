@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REINOW · Parceiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p:#4b095d;--g:#d8a43e;--lp:#f0e8f5;--lg:#fdf6e3;--gr:#1D9E75;--grl:#e8f7f2;--rd:#c0392b;--rdl:#fdf0f0;--border:#e0d0e8;--dark:#1a1a1a;--mid:#666}
+body{font-family:'Josefin Sans',sans-serif;min-height:100vh;background:#faf8fc;color:var(--dark)}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.login-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80') center/cover;filter:brightness(.3) saturate(1.2)}
+.login-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(75,9,93,.8) 0%,rgba(20,2,28,.9) 100%)}
+.login-box{position:relative;z-index:2;background:rgba(255,255,255,.97);border-radius:18px;padding:44px 36px;width:100%;max-width:380px;text-align:center;box-shadow:0 32px 80px rgba(75,9,93,.4)}
+.login-logo{font-family:'Cinzel',serif;font-size:34px;font-weight:700;color:var(--p);letter-spacing:.06em}
+.login-sub{font-family:'Cinzel',serif;font-size:12px;color:var(--g);letter-spacing:.12em;margin-top:4px}
+.divider{height:1px;background:var(--border);margin:22px 0}
+.lbl{font-size:10px;font-weight:600;color:var(--mid);letter-spacing:.1em;text-align:left;display:block;margin-bottom:5px;text-transform:uppercase}
+.inp{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-family:'Josefin Sans',sans-serif;font-size:13.5px;outline:none;margin-bottom:12px;transition:border .2s}
+.inp:focus{border-color:var(--p)}
+.btn-login{width:100%;background:var(--p);color:var(--g);font-family:'Cinzel',serif;font-size:13px;font-weight:600;padding:13px;border:none;border-radius:9px;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn-login:hover{opacity:.9}
+.login-err{font-size:11.5px;color:var(--rd);margin:-6px 0 10px;display:none;text-align:left}
+.login-foot{font-size:10px;color:#bbb;margin-top:16px}
+
+/* ── APP ── */
+#app-screen{display:none;flex-direction:column;min-height:100vh}
+.topbar{background:var(--p);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--g)}
+.tb-logo{font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:var(--g)}
+.tb-sub{font-size:9px;color:#c9a8d4;margin-top:1px;letter-spacing:.04em}
+.tb-right{display:flex;align-items:center;gap:8px}
+.pill{font-size:10px;padding:3px 11px;border-radius:20px}
+.pill-user{background:rgba(216,164,62,.15);border:1px solid rgba(216,164,62,.3);color:var(--g)}
+.pill-client{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;display:none}
+.btn-sair{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);font-size:10px;padding:3px 10px;border-radius:6px;cursor:pointer;font-family:'Josefin Sans',sans-serif}
+.btn-sair:hover{border-color:rgba(255,255,255,.5);color:#fff}
+
+.main{display:grid;grid-template-columns:240px 1fr;flex:1;height:calc(100vh - 52px)}
+
+/* ── SIDEBAR ── */
+.sidebar{background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sb-header{padding:16px 14px 10px;border-bottom:1px solid var(--border)}
+.sb-title{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--mid);letter-spacing:.12em;text-transform:uppercase}
+.sb-steps{padding:10px 0}
+.step{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;transition:background .15s;border-left:3px solid transparent}
+.step:hover{background:var(--lp)}
+.step.active{background:var(--lp);border-left-color:var(--p)}
+.step.done .step-n{background:var(--gr);color:#fff}
+.step.locked{opacity:.4;cursor:default}
+.step-n{width:20px;height:20px;border-radius:50%;background:var(--border);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;color:var(--mid);flex-shrink:0;font-family:'Cinzel',serif}
+.step.active .step-n{background:var(--p);color:var(--g)}
+.step-info{}
+.step-label{font-size:11.5px;font-weight:600;color:var(--dark)}
+.step-sub{font-size:10px;color:var(--mid)}
+.sb-divider{height:1px;background:var(--border);margin:8px 14px}
+.sb-client-box{margin:10px;background:var(--lp);border-radius:8px;padding:10px 12px;display:none}
+.sb-cl-label{font-family:'Cinzel',serif;font-size:8px;color:var(--mid);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.sb-cl-nome{font-size:12px;font-weight:700;color:var(--p);font-family:'Cinzel',serif}
+.sb-cl-status{font-size:10px;color:var(--mid);margin-top:2px}
+.btn-novo-cliente{width:100%;background:none;border:1px solid var(--border);color:var(--mid);font-size:10.5px;padding:6px;border-radius:6px;cursor:pointer;font-family:'Josefin Sans',sans-serif;margin-top:8px}
+.btn-novo-cliente:hover{border-color:var(--p);color:var(--p)}
+.sb-version{margin:auto 14px 12px;font-size:10px;color:#ccc;text-align:center}
+
+/* ── CONTENT ── */
+.content{display:flex;flex-direction:column;height:calc(100vh - 52px);overflow:hidden}
+.chat-area{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;gap:10px;animation:fi .25s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Cinzel',serif;flex-shrink:0}
+.av.bot{background:var(--p);color:var(--g)}
+.av.user{background:var(--g);color:var(--p)}
+.bubble{max-width:80%;padding:11px 15px;border-radius:12px;font-size:12.5px;line-height:1.7}
+.bubble.bot{background:#fff;border:1px solid var(--border);color:var(--dark);border-bottom-left-radius:3px}
+.bubble.user{background:var(--p);color:#fff;border-bottom-right-radius:3px}
+.bubble strong{color:var(--p)}
+.bubble.user strong{color:var(--g)}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:4px 0;width:100%}
+.card-section{padding:12px 16px;border-bottom:1px solid var(--border)}
+.card-section:last-child{border-bottom:none}
+.card-label{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.card-label.purple{color:var(--p)}
+.card-label.green{color:var(--gr)}
+.card-text{font-size:12px;color:var(--dark);line-height:1.7;white-space:pre-wrap}
+.card-actions{padding:12px 16px;background:var(--lp);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card-action-label{font-size:11px;color:var(--mid);flex:1;min-width:100px}
+.btn-ok{background:var(--gr);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
+.btn-ok:hover{opacity:.85}
+.btn-ajust{background:var(--g);color:var(--p);border:none;padding:8px 16px;border-radius:8px;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
+.btn-ajust:hover{opacity:.85}
+
+/* ── DOWNLOAD CARD ── */
+.download-card{background:var(--lp);border:1.5px solid var(--p);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin:4px 0;width:100%}
+.dl-icon{font-size:24px;flex-shrink:0}
+.dl-info{flex:1}
+.dl-titulo{font-family:'Cinzel',serif;font-size:12px;color:var(--p);font-weight:700;margin-bottom:3px}
+.dl-sub{font-size:10.5px;color:var(--mid)}
+.btn-dl{background:var(--p);color:var(--g);border:none;padding:9px 14px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn-dl:hover{opacity:.9}
+
+/* ── AGUARDO ── */
+.aguardo-card{background:#fff;border:1.5px solid var(--g);border-radius:12px;padding:14px 16px;margin:4px 0;width:100%}
+.aguardo-titulo{font-family:'Cinzel',serif;font-size:12px;color:var(--p);font-weight:700;margin-bottom:6px}
+.aguardo-desc{font-size:11.5px;color:var(--mid);line-height:1.6;margin-bottom:12px}
+.btn-cliente-ok{background:var(--p);color:var(--g);border:none;padding:9px 18px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:600;cursor:pointer;margin-right:8px}
+.btn-cliente-ok:hover{opacity:.9}
+.btn-cliente-ajust{background:none;border:1px solid var(--border);color:var(--mid);padding:9px 14px;border-radius:8px;font-family:'Josefin Sans',sans-serif;font-size:11px;cursor:pointer}
+.btn-cliente-ajust:hover{border-color:var(--p);color:var(--p)}
+
+/* ── UPLOAD + FORM ── */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;width:100%}
+.upload-zone:hover{border-color:var(--p);background:var(--lp)}
+.upload-icon{font-size:28px;margin-bottom:6px}
+.upload-title{font-family:'Cinzel',serif;font-size:13px;color:var(--p);margin-bottom:3px}
+.upload-sub{font-size:11px;color:var(--mid)}
+
+.extras-form{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin:4px 0;width:100%}
+.ef-title{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--p);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.ef-row{margin-bottom:10px}
+.ef-label{font-size:10px;font-weight:600;color:var(--mid);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ef-inp{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Josefin Sans',sans-serif;font-size:12px;outline:none;transition:border .2s}
+.ef-inp:focus{border-color:var(--p)}
+.ef-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.ef-check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--dark)}
+.ef-check input{accent-color:var(--p)}
+.btn-confirmar{background:var(--p);color:var(--g);border:none;padding:10px 20px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:600;cursor:pointer;margin-top:4px}
+.btn-confirmar:hover{opacity:.9}
+
+/* ── METRICAS FORM ── */
+.metricas-form{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin:4px 0;width:100%}
+
+/* ── CLIENT CARD ── */
+.client-card{background:var(--lp);border:1px solid var(--border);border-radius:12px;padding:14px;margin:4px 0;width:100%}
+.cc-label{font-family:'Cinzel',serif;font-size:8px;color:var(--mid);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.cc-nome{font-size:16px;font-weight:700;color:var(--p);font-family:'Cinzel',serif}
+.cc-nicho{font-size:11.5px;color:var(--mid);margin-top:3px}
+.cc-info{font-size:10.5px;color:#085041;margin-top:6px;padding:4px 8px;background:var(--grl);border-radius:6px;display:inline-block}
+.cc-src{font-size:9.5px;color:#aaa;margin-top:6px;font-style:italic}
+.cc-btns{display:flex;gap:8px;margin-top:12px}
+.btn-confirm{background:var(--p);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'Josefin Sans',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer}
+.btn-confirm:hover{opacity:.85}
+.btn-cancel{background:none;border:1px solid var(--border);color:var(--mid);padding:8px 14px;border-radius:8px;font-family:'Josefin Sans',sans-serif;font-size:11.5px;cursor:pointer}
+
+/* ── TYPING ── */
+.typing{display:flex;gap:4px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:12px;width:fit-content}
+.typing span{width:6px;height:6px;background:var(--p);border-radius:50%;animation:b .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ── INPUT BAR ── */
+.input-bar{border-top:1px solid var(--border);padding:14px 18px;background:#fff;display:flex;gap:8px;align-items:flex-end}
+.input-bar textarea{flex:1;border:1.5px solid var(--border);border-radius:9px;padding:9px 13px;font-family:'Josefin Sans',sans-serif;font-size:12.5px;resize:none;outline:none;max-height:100px;transition:border .2s;line-height:1.5}
+.input-bar textarea:focus{border-color:var(--p)}
+.btn-send{background:var(--p);color:var(--g);border:none;width:38px;height:38px;border-radius:9px;cursor:pointer;font-size:16px;flex-shrink:0}
+.btn-send:hover{opacity:.85}
+
+/* ── HINT ── */
+.hint-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--mid);width:100%;line-height:1.6}
+.hint-box strong{color:var(--p);display:block;margin-bottom:4px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em}
+.hint-ex{background:var(--lp);border-radius:5px;padding:4px 9px;font-size:10.5px;color:var(--p);margin-top:5px;font-family:monospace}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-overlay"></div>
+  <div class="login-box">
+    <div class="login-logo">REINOW</div>
+    <div class="login-sub">Parceiro · Conteúdo Express</div>
+    <div class="divider"></div>
+    <label class="lbl">E-mail</label>
+    <input class="inp" id="li-email" type="email" placeholder="seu@reinow.com.br" onkeydown="if(event.key==='Enter')login()">
+    <label class="lbl">Senha</label>
+    <input class="inp" id="li-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+    <div class="login-err" id="li-err">E-mail ou senha incorretos.</div>
+    <button class="btn-login" onclick="login()">Entrar →</button>
+    <div class="login-foot">Acesso exclusivo · REINOW Marketing</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen">
+  <div class="topbar">
+    <div>
+      <div class="tb-logo">REINOW</div>
+      <div class="tb-sub">Parceiro · Conteúdo Express v2</div>
+    </div>
+    <div class="tb-right">
+      <div class="pill pill-user" id="pill-user">—</div>
+      <div class="pill pill-client" id="pill-client"></div>
+      <button class="btn-sair" onclick="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sb-header">
+        <div class="sb-title">Fluxo do Processo</div>
+      </div>
+      <div class="sb-steps" id="sb-steps">
+        <div class="step active" id="sb1"><div class="step-n" id="sn1">1</div><div class="step-info"><div class="step-label">Selecionar cliente</div><div class="step-sub">Ativo ou novo</div></div></div>
+        <div class="step locked" id="sb2"><div class="step-n" id="sn2">2</div><div class="step-info"><div class="step-label">Upload briefing</div><div class="step-sub">CSV do Tally</div></div></div>
+        <div class="step locked" id="sb3"><div class="step-n" id="sn3">3</div><div class="step-info"><div class="step-label">Informações extras</div><div class="step-sub">ManyChat, cores, obs.</div></div></div>
+        <div class="step locked" id="sb4"><div class="step-n" id="sn4">4</div><div class="step-info"><div class="step-label">Card do cliente</div><div class="step-sub">Ficha visual</div></div></div>
+        <div class="step locked" id="sb5"><div class="step-n" id="sn5">5</div><div class="step-info"><div class="step-label">Estratégia</div><div class="step-sub">Plano 3 meses</div></div></div>
+        <div class="step locked" id="sb6"><div class="step-n" id="sn6">6</div><div class="step-info"><div class="step-label">Roteiros</div><div class="step-sub">Falados + Não falados</div></div></div>
+        <div class="step locked" id="sb7"><div class="step-n" id="sn7">7</div><div class="step-info"><div class="step-label">Gravação</div><div class="step-sub">Aguardar retorno</div></div></div>
+        <div class="step locked" id="sb8"><div class="step-n" id="sn8">8</div><div class="step-info"><div class="step-label">Legendas + Calendário</div><div class="step-sub">3 meses</div></div></div>
+        <div class="step locked" id="sb9"><div class="step-n" id="sn9">9</div><div class="step-info"><div class="step-label">Relatório Mês 1</div><div class="step-sub">Métricas + análise</div></div></div>
+        <div class="step locked" id="sb10"><div class="step-n" id="sn10">10</div><div class="step-info"><div class="step-label">Relatório Mês 2</div><div class="step-sub">Métricas + análise</div></div></div>
+        <div class="step locked" id="sb11"><div class="step-n" id="sn11">11</div><div class="step-info"><div class="step-label">Renovação</div><div class="step-sub">Relatório compilado</div></div></div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-client-box" id="sb-client-box">
+        <div class="sb-cl-label">Cliente ativo</div>
+        <div class="sb-cl-nome" id="sb-cl-nome">—</div>
+        <div class="sb-cl-status" id="sb-cl-status">—</div>
+        <button class="btn-novo-cliente" onclick="novoCliente()">+ Novo cliente</button>
+      </div>
+      <div class="sb-version">Agente REINOW v2.0</div>
+    </div>
+
+    <div class="content">
+      <div class="chat-area" id="chat"></div>
+      <div class="input-bar">
+        <textarea id="txt" rows="1" placeholder="Digite uma mensagem ou peça ajuste..." onkeydown="hk(event)" oninput="ar(this)"></textarea>
+        <button class="btn-send" onclick="send()">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTES ────────────────────────────────────────────────────────────────
+const USERS = { 'colaboradora@reinow.com.br': 'reinow2026', 'fran@reinow.com.br': 'reinow2026' };
+const TALLY_SKIP = ['submission id','respondent id','submitted at','start time','end time'];
+const NAME_COLS = ['nome completo','nome','name','cliente','responsável','empresa'];
+const NICHE_COLS = ['o que você vende','o que voce vende','nicho','serviço'];
+const OBJ_COLS = ['o que você mais deseja','retorno','objetivo'];
+
+const GANCHOS = {
+  venda: [
+    'Vou ser direta: isso é para você ou não é. Você descobre nos próximos 30 segundos.',
+    'Se você está esperando o momento certo para {ação}, esse vídeo vai te incomodar.',
+    'Não é para todo mundo. Mas se você se reconhecer aqui, é para você.',
+    'Fiz isso uma vez. Nunca mais precisei de {problema}.',
+    '{número} semanas depois, isso mudou completamente. Deixa eu te mostrar.',
+    'Antes de fechar esse vídeo, veja isso. Leva 20 segundos.',
+    'A pergunta não é se você precisa disso. É quanto tempo você ainda vai esperar.',
+    'Se eu tivesse que recomeçar do zero hoje, faria só uma coisa diferente. Essa aqui.',
+    'Você não precisa estar pronto. Precisa só dar o primeiro passo.',
+    'Problema que precisa ser resolvido com urgência.'
+  ],
+  marca: [
+    'Tem uma coisa que todo mundo no mercado de {nicho} faz que eu me recuso a fazer.',
+    'O detalhe que ninguém te conta sobre {tema}. E deveria.',
+    'Depois de {número} clientes, percebi que o problema quase nunca é o que parece.',
+    'Eu testei {ação} por {tempo}. O que realmente mudou o jogo foi {detalhe}.',
+    'Todo mundo faz {prática comum}. Eu faço o oposto. E funciona.',
+    '{número} anos para aprender isso. Te conto em 60 segundos.',
+    'Nos bastidores de {processo}: o que você nunca vê.',
+    'Essa é a parte que o mercado de {nicho} não quer que você saiba.',
+    'A maioria chama isso de {termo}. Na prática é {realidade diferente}.',
+    'Eu acreditava nisso até ver o contrário acontecer na prática. Mudou tudo.'
+  ],
+  identificacao: [
+    'Para de rolar se você também {dor específica}.',
+    'Isso vai parecer que eu li a sua mente.',
+    'Eu fiz isso por anos achando que estava certo. Era exatamente o que me travava.',
+    'Quem me dera alguém tivesse me dito isso antes de {situação}.',
+    'A verdade que você não quer ouvir sobre {tema}.',
+    'Isso aqui vai incomodar algumas pessoas. Mas precisa ser dito.',
+    'Quantas {situações de adiamento} já vieram e foram sem você {ação}?',
+    'Você também já {comportamento com vergonha}? Eu também. Por muito tempo.',
+    'Existe um tipo de {problema} que a gente normaliza. E não deveria.',
+    'Sofá. Netflix. "Começo na segunda." Eu conheço esse ciclo.'
+  ]
+};
+
+// ── ESTADO ────────────────────────────────────────────────────────────────────
+let currentUser = '';
+let clientData = null;
+let extras = {};
+let history = [];
+let materials = {};
+let fluxoStep = 1;
+
+// Status labels
+const STATUS_LABELS = {
+  1:'Selecionando cliente',2:'Upload do briefing',3:'Informações extras',
+  4:'Card gerado',5:'Estratégia',6:'Roteiros',7:'Aguardando gravação',
+  8:'Legendas e calendário',9:'Relatório mês 1',10:'Relatório mês 2',11:'Renovação'
+};
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function saveSession() {
+  if (!clientData) return;
+  const key = `reinow2_${currentUser}_${clientData.nome.replace(/\s+/g,'_')}`;
+  localStorage.setItem(key, JSON.stringify({ clientData, extras, materials, fluxoStep }));
+  localStorage.setItem(`reinow2_last_${currentUser}`, key);
+}
+function loadSession() {
+  const key = localStorage.getItem(`reinow2_last_${currentUser}`);
+  if (!key) return null;
+  try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+}
+function clearSession() {
+  if (!clientData) return;
+  const key = `reinow2_${currentUser}_${clientData.nome.replace(/\s+/g,'_')}`;
+  localStorage.removeItem(key);
+  localStorage.removeItem(`reinow2_last_${currentUser}`);
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function login() {
+  const email = document.getElementById('li-email').value.trim().toLowerCase();
+  const pass = document.getElementById('li-pass').value;
+  if (USERS[email] && USERS[email] === pass) {
+    document.getElementById('li-err').style.display = 'none';
+    currentUser = email.split('@')[0];
+    document.getElementById('pill-user').textContent = currentUser;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'flex';
+    initApp();
+  } else {
+    document.getElementById('li-err').style.display = 'block';
+  }
+}
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('li-pass').value = '';
+  resetState();
+}
+function resetState() {
+  clientData = null; extras = {}; history = []; materials = {}; fluxoStep = 1;
+  document.getElementById('pill-client').style.display = 'none';
+  document.getElementById('sb-client-box').style.display = 'none';
+  for (let i = 1; i <= 11; i++) setStep(i, i === 1 ? 'active' : 'locked');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function initApp() {
+  const session = loadSession();
+  if (session && session.clientData) {
+    clientData = session.clientData;
+    extras = session.extras || {};
+    materials = session.materials || {};
+    fluxoStep = session.fluxoStep || 1;
+    updateSidebar();
+    document.getElementById('chat').innerHTML = '';
+    bot(`Bem-vinda de volta, <strong>${currentUser}</strong>! 👑<br><br>Sessão de <strong>${clientData.nome}</strong> retomada.<br>Status: <strong>${STATUS_LABELS[fluxoStep] || 'Em andamento'}</strong>`);
+    restoreFlow();
+  } else {
+    document.getElementById('chat').innerHTML = '';
+    initStep1();
+  }
+}
+
+function restoreFlow() {
+  if (fluxoStep <= 2) { initStep1(); return; }
+  if (fluxoStep === 3) { mostrarExtrasForm(); return; }
+  if (fluxoStep === 4) { bot('O card do cliente foi gerado. Precisa gerar novamente ou já foi aprovado?'); mostrarBotoes('card-restaurado'); return; }
+  if (fluxoStep === 5) { bot('A estratégia está em andamento. Precisa gerar novamente?'); mostrarBotoes('estrategia-restaurada'); return; }
+  if (fluxoStep === 6) { bot('Os roteiros estão em andamento. Precisa gerar novamente?'); mostrarBotoes('roteiros-restaurados'); return; }
+  if (fluxoStep === 7) { mostrarAguardoGravacao(); return; }
+  if (fluxoStep === 8) { bot('Aguardando conteúdo gravado para gerar legendas. Me informe o que foi gravado.'); return; }
+  if (fluxoStep >= 9) { bot(`Estamos na etapa de ${STATUS_LABELS[fluxoStep]}. Como posso ajudar?`); return; }
+}
+
+// ── STEP 1: SELECIONAR CLIENTE ────────────────────────────────────────────────
+function initStep1() {
+  setStep(1, 'active');
+  bot(`Olá, <strong>${currentUser}</strong>! 👑<br><br>Vou te guiar por todo o processo do <strong>Conteúdo Express</strong>.<br><br>Deseja continuar com um cliente existente ou criar novo?`);
+  
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'step1-opcoes';
+  d.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn-ok" onclick="iniciarNovoCliente()">+ Novo cliente</button>
+    <button class="btn-ajust" onclick="mostrarClientesSalvos()">Clientes salvos</button>
+  </div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function iniciarNovoCliente() {
+  removeEl('step1-opcoes');
+  usr('Novo cliente');
+  setStep(1, 'done'); setStep(2, 'active');
+  bot('Perfeito! Antes de subir o briefing, atenção ao nome do arquivo:');
+  showHint();
+  showUpload();
+}
+
+function mostrarClientesSalvos() {
+  removeEl('step1-opcoes');
+  usr('Ver clientes salvos');
+  // Buscar no localStorage
+  const clientes = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(`reinow2_${currentUser}_`) && !key.includes('_last_')) {
+      try {
+        const data = JSON.parse(localStorage.getItem(key));
+        if (data && data.clientData) clientes.push(data);
+      } catch {}
+    }
+  }
+  if (clientes.length === 0) {
+    bot('Nenhum cliente salvo encontrado. Vamos criar um novo!');
+    setTimeout(iniciarNovoCliente, 500);
+    return;
+  }
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'clientes-salvos';
+  d.innerHTML = `<div style="width:90%"><div class="card">
+    <div class="card-section"><div class="card-label purple">Clientes salvos</div>
+    ${clientes.map((s,i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0e8f5">
+      <div><div style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:#4b095d">${s.clientData.nome}</div><div style="font-size:10px;color:#888">${STATUS_LABELS[s.fluxoStep]||''}</div></div>
+      <button class="btn-ok" style="font-size:11px;padding:5px 12px" onclick="carregarCliente(${i})">Carregar</button>
+    </div>`).join('')}
+    </div>
+    <div class="card-actions"><button class="btn-ajust" onclick="removeEl('clientes-salvos');iniciarNovoCliente()">+ Novo cliente</button></div>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  window._clientesSalvos = clientes;
+}
+
+function carregarCliente(idx) {
+  const session = window._clientesSalvos[idx];
+  clientData = session.clientData;
+  extras = session.extras || {};
+  materials = session.materials || {};
+  fluxoStep = session.fluxoStep || 1;
+  removeEl('clientes-salvos');
+  usr(clientData.nome);
+  updateSidebar();
+  bot(`Cliente <strong>${clientData.nome}</strong> carregado!<br>Status: <strong>${STATUS_LABELS[fluxoStep]}</strong>`);
+  restoreFlow();
+}
+
+function novoCliente() {
+  if (!confirm('Salvar sessão atual e iniciar novo cliente?')) return;
+  saveSession();
+  resetState();
+  document.getElementById('chat').innerHTML = '';
+  initStep1();
+}
+
+// ── STEP 2: UPLOAD CSV ────────────────────────────────────────────────────────
+function showHint() {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<div style="width:90%"><div class="hint-box">
+    <strong>Como nomear o CSV do Tally</strong>
+    Use o padrão: <strong>briefing_NOME DO CLIENTE.csv</strong>
+    <div class="hint-ex">briefing_EU SOU UMA DIVA.csv</div>
+    <div class="hint-ex">briefing_Clinica Aya Saude.csv</div>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function showUpload() {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'upload-zone';
+  d.innerHTML = `<div style="width:100%"><div class="upload-zone" onclick="document.getElementById('csv-input').click()" id="dz">
+    <input type="file" id="csv-input" accept=".csv,.txt" onchange="onFile(event)" style="display:none">
+    <div class="upload-icon">📋</div>
+    <div class="upload-title">Upload CSV do Tally</div>
+    <div class="upload-sub">briefing_NOME DO CLIENTE.csv</div>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  setTimeout(() => {
+    const dz = document.getElementById('dz');
+    if (!dz) return;
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = '#4b095d'; dz.style.background = '#f0e8f5'; });
+    dz.addEventListener('dragleave', () => { dz.style.borderColor = ''; dz.style.background = ''; });
+    dz.addEventListener('drop', e => { e.preventDefault(); dz.style.borderColor = ''; dz.style.background = ''; if (e.dataTransfer.files[0]) doCSV(e.dataTransfer.files[0]); });
+  }, 100);
+}
+
+function onFile(e) { if (e.target.files[0]) doCSV(e.target.files[0]); }
+
+function parseCSVLine(line) {
+  const result = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { if (inQ && line[i+1] === '"') { cur += '"'; i++; } else { inQ = !inQ; } }
+    else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else { cur += ch; }
+  }
+  result.push(cur.trim()); return result;
+}
+
+function findField(data, candidates) {
+  for (const key of Object.keys(data)) {
+    const kl = key.toLowerCase();
+    for (const c of candidates) {
+      if (kl.includes(c)) { const v = data[key]; if (v && v.trim().length > 1) return v.trim(); }
+    }
+  }
+  return '';
+}
+
+function extractName(filename, data) {
+  const m = filename.match(/^briefing[_\-\s]+(.+?)\.csv$/i);
+  if (m && m[1].trim()) return m[1].trim();
+  const fromCol = findField(data, NAME_COLS);
+  if (fromCol) return fromCol;
+  for (const [k, v] of Object.entries(data)) {
+    if (TALLY_SKIP.some(s => k.toLowerCase().includes(s))) continue;
+    if (v && v.trim().length > 1) return v.trim();
+  }
+  return filename.replace(/\.csv$/i, '');
+}
+
+function doCSV(f) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    removeEl('upload-zone');
+    usr(`📋 ${f.name}`);
+    parseClient(e.target.result, f.name);
+  };
+  reader.readAsText(f, 'UTF-8');
+}
+
+function parseClient(csv, filename) {
+  const lines = csv.split('\n').filter(l => l.trim());
+  if (lines.length < 2) { bot('Não consegui ler o arquivo. Verifique se é um CSV válido.'); showUpload(); return; }
+  const headers = parseCSVLine(lines[0]);
+  const values = parseCSVLine(lines[1]);
+  const raw = {};
+  headers.forEach((h, i) => {
+    if (!TALLY_SKIP.some(s => h.toLowerCase().includes(s))) raw[h] = (values[i] || '').trim();
+  });
+  const nome = extractName(filename, raw);
+  const nicho = findField(raw, NICHE_COLS) || values[1] || 'Não identificado';
+  const ig = findField(raw, ['instagram']) || '';
+  const objetivo = findField(raw, OBJ_COLS) || '';
+  clientData = { nome, nicho, ig, objetivo, raw, filename };
+
+  bot('Li o briefing! Confirme o cliente:');
+  const c = document.getElementById('chat');
+  const el = document.createElement('div');
+  el.className = 'msg'; el.id = 'confirm-client';
+  el.innerHTML = `<div style="width:75%"><div class="client-card">
+    <div class="cc-label">Cliente identificado</div>
+    <div class="cc-nome">${nome}</div>
+    <div class="cc-nicho">📌 ${nicho}</div>
+    ${ig ? `<div style="font-size:10px;color:#aaa;margin-top:3px">@${ig}</div>` : ''}
+    ${objetivo ? `<div class="cc-info">🎯 ${objetivo.substring(0,80)}</div>` : ''}
+    <div class="cc-src">${Object.keys(raw).length} campos carregados · Nome lido do ${/^briefing/i.test(filename) ? 'arquivo' : 'CSV'}</div>
+    <div class="cc-btns">
+      <button class="btn-confirm" onclick="confirmarCliente()">✓ Confirmar</button>
+      <button class="btn-cancel" onclick="cancelarCliente()">✗ CSV errado</button>
+    </div>
+  </div></div>`;
+  c.appendChild(el); c.scrollTop = c.scrollHeight;
+}
+
+function cancelarCliente() {
+  clientData = null; removeEl('confirm-client');
+  bot('Tudo bem! Envie o CSV correto.'); showUpload();
+}
+
+function confirmarCliente() {
+  removeEl('confirm-client');
+  setStep(2, 'done'); setStep(3, 'active');
+  updateSidebar();
+  usr('✓ ' + clientData.nome);
+  bot(`Cliente confirmado! Antes de gerar os materiais, preciso de algumas informações extras sobre <strong>${clientData.nome}</strong>.`);
+  mostrarExtrasForm();
+}
+
+// ── STEP 3: EXTRAS ────────────────────────────────────────────────────────────
+function mostrarExtrasForm() {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'extras-form';
+  d.innerHTML = `<div style="width:92%"><div class="extras-form">
+    <div class="ef-title">👑 Informações adicionais — ${clientData.nome}</div>
+    <div class="ef-row-2">
+      <div class="ef-row">
+        <label class="ef-label">Tem automação ManyChat?</label>
+        <label class="ef-check"><input type="checkbox" id="ef-manychat" onchange="togglePalavra()"> Sim, terá ManyChat</label>
+      </div>
+      <div class="ef-row" id="ef-palavra-row" style="display:none">
+        <label class="ef-label">Palavra-chave</label>
+        <input class="ef-inp" id="ef-palavra" placeholder="Ex: DIVA SP">
+      </div>
+    </div>
+    <div class="ef-row">
+      <label class="ef-label">Quem fará as postagens?</label>
+      <select class="ef-inp" id="ef-quem-posta">
+        <option value="REINOW">REINOW posta pelo cliente</option>
+        <option value="Empresário">Empresário posta por conta própria</option>
+        <option value="Ambos">Ambos</option>
+      </select>
+    </div>
+    <div class="ef-row-2">
+      <div class="ef-row">
+        <label class="ef-label">Cores da marca</label>
+        <input class="ef-inp" id="ef-cores" placeholder="Ex: Rosa #e8175d, Laranja #ff6b00">
+      </div>
+      <div class="ef-row">
+        <label class="ef-label">Fonte da marca</label>
+        <input class="ef-inp" id="ef-fonte" placeholder="Ex: Montserrat, não declarada">
+      </div>
+    </div>
+    <div class="ef-row">
+      <label class="ef-label">Público-alvo (descreva)</label>
+      <input class="ef-inp" id="ef-publico" placeholder="Ex: Mulheres 30-50 anos que querem...">
+    </div>
+    <div class="ef-row">
+      <label class="ef-label">Observações importantes a considerar</label>
+      <textarea class="ef-inp" id="ef-obs" rows="3" placeholder="Qualquer informação relevante para a estratégia..."></textarea>
+    </div>
+    <button class="btn-confirmar" onclick="confirmarExtras()">Confirmar e gerar card →</button>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function togglePalavra() {
+  const chk = document.getElementById('ef-manychat');
+  document.getElementById('ef-palavra-row').style.display = chk.checked ? 'block' : 'none';
+}
+
+function confirmarExtras() {
+  extras = {
+    manychat: document.getElementById('ef-manychat').checked,
+    palavraChave: document.getElementById('ef-palavra')?.value.trim() || '',
+    quemPosta: document.getElementById('ef-quem-posta').value,
+    cores: document.getElementById('ef-cores').value.trim(),
+    fonte: document.getElementById('ef-fonte').value.trim(),
+    publico: document.getElementById('ef-publico').value.trim(),
+    observacoes: document.getElementById('ef-obs').value.trim()
+  };
+  removeEl('extras-form');
+  setStep(3, 'done'); setStep(4, 'active');
+  updateSidebar();
+  usr('Informações confirmadas');
+  bot(`Informações extras registradas! Gerando o <strong>card do cliente</strong>...`);
+  setTimeout(gerarCard, 800);
+}
+
+// ── STEP 4: CARD ──────────────────────────────────────────────────────────────
+async function gerarCard() {
+  typing();
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'card', clientData, extras })
+    });
+    if (!res.ok) throw new Error('Erro no servidor');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    rmTyping();
+    materials.cardUrl = url;
+    saveSession();
+    showDownload(url, `REINOW_Card_${clientData.nome.replace(/\s+/g,'_')}.docx`, 'Card do Cliente', 'Ficha visual completa para revisão interna');
+    bot('Card gerado! Revise as informações do cliente antes de avançar.');
+    mostrarAprovacao('card', () => {
+      setStep(4, 'done'); setStep(5, 'active'); updateSidebar(); saveSession();
+      bot('Card aprovado! Gerando a <strong>estratégia de conteúdo</strong>...');
+      setTimeout(gerarEstrategia, 800);
+    }, () => {
+      bot('O que precisa ajustar no card? Descreva abaixo e vou refazer.');
+    });
+  } catch (err) { rmTyping(); bot('Erro ao gerar card: ' + err.message); }
+}
+
+// ── STEP 5: ESTRATÉGIA ────────────────────────────────────────────────────────
+async function gerarEstrategia() {
+  typing();
+  const briefing = Object.entries(clientData.raw).filter(([k,v]) => v && v.trim()).map(([k,v]) => `${k}: ${v}`).join('\n');
+  const sysPrompt = buildSysPrompt();
+  const prompt = `Com base no briefing completo de ${clientData.nome} (${clientData.nicho}), gere a ESTRATÉGIA DE CONTEÚDO para 3 meses.
+
+Use ESTE FORMATO EXATO:
+
+## OBJETIVO GERAL
+[2-3 linhas: objetivo real do cliente]
+
+## DISTRIBUIÇÃO DOS CONTEÚDOS
+- Total: 30 posts | Segundas e quintas
+- Falados: 10 vídeos (${Math.round(10/30*100)}%)
+- Não falados: 20 frases (${Math.round(20/30*100)}%)
+- Distribuição temática: 40% Identificação · 30% Marca · 30% Venda
+${extras.manychat ? `- Automação ManyChat: palavra-chave "${extras.palavraChave}"` : ''}
+${extras.quemPosta ? `- Responsável pelas postagens: ${extras.quemPosta}` : ''}
+
+## ARCO NARRATIVO
+### Mês 1
+[Tema e tom do primeiro mês]
+### Mês 2
+[Tema e tom do segundo mês]
+### Mês 3
+[Tema e tom do terceiro mês]
+
+## PILARES DE CONTEÚDO
+[4-5 pilares específicos para ${clientData.nicho}]
+
+## TIPOS DE CONTEÚDO
+### Vídeos Falados (10)
+[Como usar os falados: gancho + fala + CTA]
+### Frases Não Faladas (20)
+[Como usar os não falados: frase na cena real]
+
+## DEFINIÇÕES CENTRAIS E REGRAS
+[Regras de tom, identidade, o que nunca fazer]
+
+## FERRAMENTAS
+${extras.manychat ? `- ManyChat: automação com "${extras.palavraChave}"` : '- Sem automação definida'}
+- Planable: agendamento e aprovação
+- Metricool: analytics
+
+## FORMA DE CAPTURA DE LEADS
+[Como o conteúdo vai capturar leads]
+
+Seja 100% específico ao nicho ${clientData.nicho}. Use os dados reais do briefing.`;
+
+  const r = await callAPI(prompt, sysPrompt);
+  rmTyping();
+  materials.estrategia = r;
+
+  // Gerar Word
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'estrategia', clientData, conteudo: r })
+    });
+    if (!res.ok) throw new Error('Erro ao gerar Word');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    materials.estrategiaUrl = url;
+    saveSession();
+    showDownload(url, `REINOW_Estrategia_${clientData.nome.replace(/\s+/g,'_')}.docx`, 'Estratégia 3 meses', 'Para enviar ao cliente aprovar');
+  } catch (err) { bot('Erro ao gerar Word da estratégia: ' + err.message); }
+
+  bot('Estratégia gerada! Envie para o cliente aprovar.');
+  mostrarAprovacaoCliente('estrategia', () => {
+    setStep(5, 'done'); setStep(6, 'active'); updateSidebar(); saveSession();
+    bot('Estratégia aprovada pelo cliente! Gerando os <strong>roteiros</strong>...');
+    setTimeout(gerarRoteiros, 800);
+  }, () => { bot('O que o cliente pediu para ajustar na estratégia?'); });
+}
+
+// ── STEP 6: ROTEIROS ──────────────────────────────────────────────────────────
+async function gerarRoteiros() {
+  typing();
+  const ganchosTexto = [
+    ...GANCHOS.venda.slice(0,4),
+    ...GANCHOS.marca.slice(0,3),
+    ...GANCHOS.identificacao.slice(0,3)
+  ].map((g,i) => `${i+1}. "${g}"`).join('\n');
+
+  const sysPrompt = buildSysPrompt();
+  const prompt = `Com base na estratégia aprovada e no briefing de ${clientData.nome} (${clientData.nicho}), crie os MATERIAIS DE GRAVAÇÃO completos.
+
+BASE DE GANCHOS VIRAIS DISPONÍVEIS (use e adapte ao nicho):
+${ganchosTexto}
+
+---
+
+## PARTE 1 — 10 ROTEIROS FALADOS
+
+Para cada roteiro use EXATAMENTE este formato:
+
+ROTEIRO 1 — [Título do roteiro]
+CENA: [Descrição da cena: onde filmar, como se posicionar, o que mostrar]
+GANCHO: [Primeira frase — use um dos ganchos adaptado ao nicho]
+FALA: [Desenvolvimento conversacional, 30-60 segundos, como contando para uma amiga]
+CTA: [Ação clara — ${extras.manychat ? `"Comenta ${extras.palavraChave} aqui"` : 'chamada para ação'}]
+
+---
+
+## PARTE 2 — 20 FRASES NÃO FALADAS
+
+Para cada frase use EXATAMENTE este formato:
+
+FRASE 1
+CATEGORIA: [Engajamento/Identificação/Provocação/Vulnerabilidade/Processo/Posicionamento/Virada]
+FRASE: [Texto curto que vai na tela — máx 3 linhas, tom humano, pensamento em voz alta]
+CENA: [Cena de 5 segundos do cotidiano do negócio]
+${extras.manychat ? `CTA: [quando pertinente, use "Comenta ${extras.palavraChave}"]` : ''}
+
+Distribuição das 20 frases: 6 Engajamento, 4 Identificação, 3 Provocação, 3 Vulnerabilidade, 2 Processo, 1 Posicionamento, 1 Virada.
+
+USE os dados reais do briefing. Tom humano, nunca corporativo.`;
+
+  const r = await callAPI(prompt, sysPrompt);
+  rmTyping();
+  materials.roteiros = r;
+
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'roteiros', clientData, conteudo: r })
+    });
+    if (!res.ok) throw new Error('Erro ao gerar Word');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    materials.roteirosUrl = url;
+    saveSession();
+    showDownload(url, `REINOW_Roteiros_${clientData.nome.replace(/\s+/g,'_')}.docx`, 'Material de Gravação', '10 falados + 20 não falados com ganchos virais');
+  } catch (err) { bot('Erro ao gerar Word dos roteiros: ' + err.message); }
+
+  bot('Roteiros prontos! Envie para o cliente aprovar antes da gravação.');
+  mostrarAprovacaoCliente('roteiros', () => {
+    setStep(6, 'done'); setStep(7, 'active'); updateSidebar(); saveSession();
+    bot('Roteiros aprovados pelo cliente!');
+    mostrarAguardoGravacao();
+  }, () => { bot('O que o cliente pediu para ajustar nos roteiros?'); });
+}
+
+// ── STEP 7: AGUARDO GRAVAÇÃO ──────────────────────────────────────────────────
+function mostrarAguardoGravacao() {
+  bot('Agora é hora de gravar! Quando a gravação estiver concluída, volte aqui e informe o que foi gravado.');
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'aguardo-grav';
+  d.innerHTML = `<div style="width:85%"><div class="aguardo-card">
+    <div class="aguardo-titulo">🎬 Aguardando gravação</div>
+    <div class="aguardo-desc">O cliente pode gravar em qualquer momento. Quando a gravação estiver pronta, informe aqui o que foi gravado e se houve adaptações nos roteiros.</div>
+    <button class="btn-cliente-ok" onclick="iniciarPosGravacao()">✓ Gravação concluída</button>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  saveSession();
+}
+
+function iniciarPosGravacao() {
+  removeEl('aguardo-grav');
+  setStep(7, 'done'); setStep(8, 'active'); updateSidebar();
+  bot('Ótimo! Me conta:<br><br>1. Quais roteiros foram gravados? (ex: Roteiros 1, 3, 5, 7 e 9)<br>2. Houve adaptações em algum roteiro?<br>3. Alguma frase não falada foi adaptada?<br><br>Com essas informações gero as legendas e o calendário.');
+  saveSession();
+}
+
+// ── STEP 8: LEGENDAS + CALENDÁRIO ────────────────────────────────────────────
+async function gerarLegendas(gravados) {
+  typing();
+  const sysPrompt = buildSysPrompt();
+  const prompt = `Com base nos roteiros aprovados e no que foi gravado (${gravados}), gere as LEGENDAS e CALENDÁRIO para 3 meses.
+
+## CALENDÁRIO 3 MESES
+Distribuição: Segundas e quintas, 30 posts no total.
+[Crie calendário com datas, tipo de post (falado/não falado), tema e gancho]
+
+## LEGENDAS COMPLETAS
+Para cada post gravado, crie:
+
+📅 [DATA] — [Tipo: Falado/Não Falado]
+📌 Tema: [Tema do post]
+📝 Legenda:
+[Legenda completa com gancho, desenvolvimento e CTA]
+${extras.manychat ? `\n#hashtags relevantes\nCTA: "Comenta ${extras.palavraChave}"` : ''}
+
+---
+[Repita para todos os 30 posts]`;
+
+  const r = await callAPI(prompt, sysPrompt);
+  rmTyping();
+  materials.legendas = r;
+
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'legendas', clientData, conteudo: r })
+    });
+    if (!res.ok) throw new Error('Erro ao gerar Word');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    materials.legendasUrl = url;
+    saveSession();
+    showDownload(url, `REINOW_Legendas_${clientData.nome.replace(/\s+/g,'_')}.docx`, 'Legendas + Calendário', '3 meses de conteúdo programado');
+  } catch (err) { bot('Erro ao gerar Word das legendas: ' + err.message); }
+
+  setStep(8, 'done'); setStep(9, 'active'); updateSidebar();
+  bot('Legendas e calendário prontos! Em 30 dias volte aqui com as métricas do primeiro mês para gerar o <strong>relatório mês 1</strong>.');
+  saveSession();
+}
+
+// ── STEP 9 e 10: RELATÓRIOS ───────────────────────────────────────────────────
+function mostrarFormMetricas(mes) {
+  bot(`Para gerar o relatório do <strong>mês ${mes}</strong>, informe as métricas abaixo:`);
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = `form-metricas-${mes}`;
+  d.innerHTML = `<div style="width:92%"><div class="extras-form">
+    <div class="ef-title">📊 Métricas — Mês ${mes}</div>
+    <div class="ef-row-2">
+      <div class="ef-row"><label class="ef-label">Alcance total</label><input class="ef-inp" id="m${mes}-alcance" placeholder="Ex: 45.000"></div>
+      <div class="ef-row"><label class="ef-label">Impressões</label><input class="ef-inp" id="m${mes}-impressoes" placeholder="Ex: 89.000"></div>
+      <div class="ef-row"><label class="ef-label">Seguidores ganhos</label><input class="ef-inp" id="m${mes}-seguidores" placeholder="Ex: +230"></div>
+      <div class="ef-row"><label class="ef-label">Engajamento médio %</label><input class="ef-inp" id="m${mes}-engajamento" placeholder="Ex: 4.2%"></div>
+      <div class="ef-row"><label class="ef-label">Post com mais alcance</label><input class="ef-inp" id="m${mes}-top-post" placeholder="Ex: Roteiro 3 — 12.400"></div>
+      <div class="ef-row"><label class="ef-label">Leads gerados</label><input class="ef-inp" id="m${mes}-leads" placeholder="${extras.manychat ? `Ex: 85 comentaram ${extras.palavraChave}` : 'Ex: 40 cliques no link'}"></div>
+    </div>
+    <div class="ef-row"><label class="ef-label">Observações (o que funcionou, o que não funcionou)</label><textarea class="ef-inp" id="m${mes}-obs" rows="3" placeholder="Escreva aqui suas observações..."></textarea></div>
+    <button class="btn-confirmar" onclick="gerarRelatorio(${mes})">Gerar relatório →</button>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+async function gerarRelatorio(mes) {
+  const metricas = {
+    'Alcance total': document.getElementById(`m${mes}-alcance`)?.value || '',
+    'Impressões': document.getElementById(`m${mes}-impressoes`)?.value || '',
+    'Seguidores ganhos': document.getElementById(`m${mes}-seguidores`)?.value || '',
+    'Engajamento médio': document.getElementById(`m${mes}-engajamento`)?.value || '',
+    'Post mais alcance': document.getElementById(`m${mes}-top-post`)?.value || '',
+    'Leads gerados': document.getElementById(`m${mes}-leads`)?.value || '',
+  };
+  const obs = document.getElementById(`m${mes}-obs`)?.value || '';
+  removeEl(`form-metricas-${mes}`);
+  typing();
+
+  const sysPrompt = buildSysPrompt();
+  const prompt = `Com base nas métricas do mês ${mes} e na estratégia de ${clientData.nome}, gere uma análise completa para o RELATÓRIO.
+
+Métricas:
+${Object.entries(metricas).map(([k,v]) => `- ${k}: ${v}`).join('\n')}
+Observações: ${obs}
+
+Gere:
+## ANÁLISE DO MÊS ${mes}
+[Análise geral do desempenho]
+
+## O QUE FUNCIONOU
+[Posts e formatos que performaram melhor e por quê]
+
+## O QUE AJUSTAR
+[O que melhorar no próximo mês]
+
+## RECOMENDAÇÕES
+[Próximos passos estratégicos]
+
+Tom: profissional mas acessível, focado em resultados reais.`;
+
+  const analise = await callAPI(prompt, sysPrompt);
+  rmTyping();
+
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'relatorio', clientData, conteudo: { metricas, analise, mes: `Mês ${mes}` } })
+    });
+    if (!res.ok) throw new Error('Erro ao gerar Word');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    materials[`relatorioMes${mes}Url`] = url;
+    saveSession();
+    showDownload(url, `REINOW_Relatorio_Mes${mes}_${clientData.nome.replace(/\s+/g,'_')}.docx`, `Relatório Mês ${mes}`, 'Análise completa de resultados');
+  } catch (err) { bot('Erro ao gerar Word do relatório: ' + err.message); }
+
+  setStep(mes === 1 ? 9 : 10, 'done');
+  if (mes === 1) {
+    setStep(10, 'active'); updateSidebar();
+    bot('Relatório do mês 1 pronto! Em mais 30 dias volte com as métricas do mês 2.');
+    saveSession();
+  } else {
+    setStep(11, 'active'); updateSidebar();
+    bot('Relatório do mês 2 pronto! Agora vamos gerar o <strong>relatório compilado de renovação</strong>.');
+    setTimeout(gerarRelatorioRenovacao, 800);
+    saveSession();
+  }
+}
+
+// ── STEP 11: RENOVAÇÃO ────────────────────────────────────────────────────────
+async function gerarRelatorioRenovacao() {
+  typing();
+  const sysPrompt = buildSysPrompt();
+  const prompt = `Com base nos 3 meses de Conteúdo Express de ${clientData.nome}, gere o RELATÓRIO COMPILADO DE RENOVAÇÃO.
+
+## RESUMO EXECUTIVO
+[Visão geral dos 3 meses]
+
+## RESULTADOS CONSOLIDADOS
+[Métricas compiladas dos 2 meses de dados]
+
+## EVOLUÇÃO DO PERFIL
+[O que mudou desde o início]
+
+## APRENDIZADOS ESTRATÉGICOS
+[O que o conteúdo revelou sobre o público]
+
+## PROPOSTA PARA RENOVAÇÃO
+[Por que renovar, o que muda no próximo ciclo, valor entregue]
+
+## PRÓXIMOS PASSOS
+[Se o cliente renovar, o que será diferente]
+
+Tom: profissional, voltado à tomada de decisão do cliente.`;
+
+  const r = await callAPI(prompt, sysPrompt);
+  rmTyping();
+
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'relatorio', clientData, conteudo: { metricas: {}, analise: r, mes: 'Compilado — Renovação' } })
+    });
+    if (!res.ok) throw new Error('Erro ao gerar Word');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    materials.relatorioRenovacaoUrl = url;
+    saveSession();
+    showDownload(url, `REINOW_Relatorio_Renovacao_${clientData.nome.replace(/\s+/g,'_')}.docx`, 'Relatório de Renovação', 'Compilado 3 meses para o cliente');
+  } catch (err) { bot('Erro ao gerar Word: ' + err.message); }
+
+  bot('Relatório de renovação pronto! Envie para o cliente.');
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'renovacao-btns';
+  d.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn-ok" onclick="clienteRenovouFn()">✓ Cliente renovou</button>
+    <button class="btn-ajust" style="background:#e74c3c;color:#fff" onclick="clienteNaoRenovouFn()">✗ Cliente não renovou</button>
+  </div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function clienteRenovouFn() {
+  removeEl('renovacao-btns');
+  setStep(11, 'done'); updateSidebar();
+  usr('✓ Cliente renovou!');
+  bot(`Que ótima notícia! 🎉<br><br>Para o novo ciclo vou gerar roteiros baseados nos resultados obtidos.<br>Me informe se há novas informações ou mudanças na estratégia para considerar.`);
+  saveSession();
+}
+
+function clienteNaoRenovouFn() {
+  removeEl('renovacao-btns');
+  setStep(11, 'done'); updateSidebar();
+  usr('Cliente não renovou');
+  bot('Entendido. A conta de <strong>' + clientData.nome + '</strong> foi marcada como encerrada. O histórico permanece salvo.<br><br>Para reativar, é só buscar este cliente na lista de clientes salvos.');
+  // Marcar como congelado
+  const key = `reinow2_${currentUser}_${clientData.nome.replace(/\s+/g,'_')}`;
+  try {
+    const data = JSON.parse(localStorage.getItem(key) || '{}');
+    data.congelado = true;
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {}
+  saveSession();
+}
+
+// ── API CALL ──────────────────────────────────────────────────────────────────
+async function callAPI(msg, sysPrompt) {
+  const msgs = [...history, { role: 'user', content: msg }];
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: msgs, system: sysPrompt })
+    });
+    const data = await res.json();
+    if (data.error) return `Erro: ${data.error}`;
+    const reply = data.content?.[0]?.text || 'Erro na resposta.';
+    history.push({ role: 'user', content: msg });
+    history.push({ role: 'assistant', content: reply });
+    return reply;
+  } catch (e) { return 'Erro de conexão com o servidor.'; }
+}
+
+function buildSysPrompt() {
+  const briefing = clientData ? Object.entries(clientData.raw || {}).filter(([k,v]) => v?.trim()).map(([k,v]) => `${k}: ${v}`).join('\n') : '';
+  return `Você é o agente de conteúdo da REINOW Marketing — Conteúdo Express.
+
+REGRAS DE TOM (inegociáveis):
+- Tom humano, conversacional, como a dona do negócio pensando em voz alta
+- NUNCA frases prontas, discursos ou linguagem corporativa
+- Direto, vulnerável quando pertinente, sem pitch de vendas
+- Cada frase soa como conversa, não roteiro
+
+CLIENTE: ${clientData?.nome || 'não definido'}
+Nicho: ${clientData?.nicho || ''}
+Instagram: ${clientData?.ig ? '@' + clientData.ig : 'não informado'}
+Objetivo: ${clientData?.objetivo || ''}
+ManyChat: ${extras?.manychat ? `Sim — palavra "${extras.palavraChave}"` : 'Não'}
+Quem posta: ${extras?.quemPosta || 'REINOW'}
+Cores: ${extras?.cores || 'não informadas'}
+Fonte: ${extras?.fonte || 'não informada'}
+Público: ${extras?.publico || ''}
+Obs: ${extras?.observacoes || ''}
+
+BRIEFING COMPLETO:
+${briefing}
+
+Seja 100% específico ao nicho. Use dados reais do briefing. Nunca genérico. Português brasileiro.`;
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────────
+function bot(html) {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<div class="av bot">R</div><div class="bubble bot">${html}</div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+function usr(t) {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg user';
+  d.innerHTML = `<div class="av user">C</div><div class="bubble user">${t}</div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+function typing() {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = 'typ';
+  d.innerHTML = `<div class="av bot">R</div><div class="typing"><span></span><span></span><span></span></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+function rmTyping() { const t = document.getElementById('typ'); if (t) t.remove(); }
+function removeEl(id) { const el = document.getElementById(id); if (el) el.remove(); }
+
+function showDownload(url, filename, titulo, sub) {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<div style="width:85%"><div class="download-card">
+    <div class="dl-icon">📄</div>
+    <div class="dl-info"><div class="dl-titulo">${titulo}</div><div class="dl-sub">${sub}</div></div>
+    <a href="${url}" download="${filename}"><button class="btn-dl">⬇ Baixar Word</button></a>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function mostrarAprovacao(tipo, onOk, onAjust) {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = `aprov-${tipo}`;
+  d.innerHTML = `<div style="width:85%"><div class="card">
+    <div class="card-actions">
+      <div class="card-action-label">O ${tipo} está correto?</div>
+      <button class="btn-ok" onclick="removeEl('aprov-${tipo}');(${onOk.toString()})()">✓ Aprovado</button>
+      <button class="btn-ajust" onclick="removeEl('aprov-${tipo}');(${onAjust.toString()})()">✎ Ajustar</button>
+    </div>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function mostrarAprovacaoCliente(tipo, onOk, onAjust) {
+  bot(`Envie o Word para o cliente aprovar. Quando tiver o retorno, clique abaixo:`);
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg'; d.id = `aprov-cliente-${tipo}`;
+  d.innerHTML = `<div style="width:85%"><div class="aguardo-card">
+    <div class="aguardo-titulo">⏳ Aguardando aprovação do cliente</div>
+    <div class="aguardo-desc">Sessão salva automaticamente. Pode fechar o navegador e retornar quando tiver o retorno do cliente.</div>
+    <button class="btn-cliente-ok" onclick="removeEl('aprov-cliente-${tipo}');(${onOk.toString()})()">✓ Cliente aprovou</button>
+    <button class="btn-cliente-ajust" onclick="removeEl('aprov-cliente-${tipo}');(${onAjust.toString()})()">✎ Cliente pediu ajuste</button>
+  </div></div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function mostrarBotoes(tipo) {
+  const c = document.getElementById('chat');
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn-ok" onclick="retomar('${tipo}','sim')">✓ Já foi aprovado</button>
+    <button class="btn-ajust" onclick="retomar('${tipo}','nao')">↺ Gerar novamente</button>
+  </div>`;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function retomar(tipo, opcao) {
+  if (tipo.includes('card')) { if (opcao === 'sim') { setStep(4,'done'); setStep(5,'active'); updateSidebar(); bot('Continuando da estratégia...'); setTimeout(gerarEstrategia, 500); } else gerarCard(); }
+  else if (tipo.includes('estrategia')) { if (opcao === 'sim') { setStep(5,'done'); setStep(6,'active'); updateSidebar(); bot('Continuando dos roteiros...'); setTimeout(gerarRoteiros, 500); } else gerarEstrategia(); }
+  else if (tipo.includes('roteiros')) { if (opcao === 'sim') { setStep(6,'done'); setStep(7,'active'); updateSidebar(); mostrarAguardoGravacao(); } else gerarRoteiros(); }
+}
+
+function updateSidebar() {
+  if (!clientData) return;
+  document.getElementById('pill-client').textContent = '👤 ' + clientData.nome;
+  document.getElementById('pill-client').style.display = 'block';
+  document.getElementById('sb-client-box').style.display = 'block';
+  document.getElementById('sb-cl-nome').textContent = clientData.nome;
+  document.getElementById('sb-cl-status').textContent = STATUS_LABELS[fluxoStep] || '';
+}
+
+function setStep(n, estado) {
+  const el = document.getElementById(`sb${n}`);
+  const num = document.getElementById(`sn${n}`);
+  if (!el) return;
+  el.className = 'step ' + estado;
+  if (estado === 'done') num.textContent = '✓';
+  else if (estado !== 'done') num.textContent = n;
+}
+
+// ── SEND ──────────────────────────────────────────────────────────────────────
+async function send() {
+  const t = document.getElementById('txt').value.trim();
+  if (!t) return;
+  document.getElementById('txt').value = ''; ar(document.getElementById('txt'));
+  usr(t);
+  const l = t.toLowerCase();
+
+  // Comandos específicos por step
+  if (fluxoStep === 8 && (l.includes('gravei') || l.includes('gravamos') || l.includes('foi gravado') || l.includes('concluída') || l.includes('pronto'))) {
+    await gerarLegendas(t); return;
+  }
+  if (fluxoStep === 9 && (l.includes('métricas') || l.includes('relatório') || l.includes('mês 1'))) {
+    mostrarFormMetricas(1); return;
+  }
+  if (fluxoStep === 10 && (l.includes('métricas') || l.includes('relatório') || l.includes('mês 2'))) {
+    mostrarFormMetricas(2); return;
+  }
+
+  // Contexto geral
+  typing();
+  const r = await callAPI(`Usuário (${currentUser}): "${t}"\nCliente ativo: ${clientData?.nome||'nenhum'}\nStep atual: ${fluxoStep} (${STATUS_LABELS[fluxoStep]||''})\nMateriais gerados: ${Object.keys(materials).join(', ')||'nenhum'}`, buildSysPrompt());
+  rmTyping();
+
+  // Se for ajuste de estratégia ou roteiros
+  if (fluxoStep === 5 && materials.estrategia) {
+    bot(r.replace(/\n/g,'<br>'));
+    bot('Estratégia ajustada! Deseja gerar o novo Word?');
+    const c = document.getElementById('chat');
+    const d = document.createElement('div');
+    d.className = 'msg';
+    d.innerHTML = `<button class="btn-ok" onclick="gerarWordEstrategia('${encodeURIComponent(r)}')">⬇ Gerar Word ajustado</button>`;
+    c.appendChild(d); c.scrollTop = c.scrollHeight;
+    materials.estrategia = r;
+    return;
+  }
+
+  bot(r.replace(/\n/g,'<br>'));
+}
+
+async function gerarWordEstrategia(encoded) {
+  const texto = decodeURIComponent(encoded);
+  typing();
+  try {
+    const res = await fetch('/api/gerar-word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'estrategia', clientData, conteudo: texto })
+    });
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    rmTyping();
+    showDownload(url, `REINOW_Estrategia_${clientData.nome.replace(/\s+/g,'_')}.docx`, 'Estratégia Ajustada', 'Nova versão para o cliente');
+    mostrarAprovacaoCliente('estrategia', () => {
+      setStep(5,'done'); setStep(6,'active'); updateSidebar(); saveSession();
+      bot('Aprovado! Gerando roteiros...');
+      setTimeout(gerarRoteiros, 800);
+    }, () => { bot('O que mais precisa ajustar?'); });
+  } catch (err) { rmTyping(); bot('Erro: ' + err.message); }
+}
+
+function hk(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+function ar(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 100) + 'px'; }
+</script>
+</body>
+</html>
